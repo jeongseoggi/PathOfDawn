@@ -70,7 +70,17 @@ public class Playerable : Character, IPunObservable
 
     public StateMachine<Playerable> sm;
     public PLAYER_TYPE player_type;
-    private State PlayerState => sm.CurState;
+    public State PlayerState
+    {
+        get { return sm.CurState; }
+        set
+        {
+            if(sm.CurState is PlayerBattleState)
+            {
+                coroutine = StartCoroutine(WaitCo());
+            }
+        }
+    }
     public PlayerBattleState battle = null;
     public GameObject target;
 
@@ -197,16 +207,6 @@ public class Playerable : Character, IPunObservable
 
     private void Update()
     {
-        //만약 플레어이블 캐릭터가 공격 상태에 있다면
-        if (PlayerState is PlayerBattleState)
-        {
-            //코루틴 중복 실행 방지
-            if (coroutine == null)
-            {
-                //코루틴 실행
-                coroutine = StartCoroutine(WaitCo());
-            }
-        }
         sm.Update();
     }
     
