@@ -19,7 +19,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public List<Playerable> otherPlayerableList;
     public List<Playerable> battleList;
 
-
     void Start()
     {
         ownerPlayerableList = new List<Playerable>();
@@ -30,22 +29,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     }
 
     void Init()
-    {
-            photonView.RPC("SetPos", RpcTarget.All);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            UIManager.instance.pvpTurnTableUIController.photonView.RPC("MoveTurnTable", RpcTarget.All);
-            battleList[2].Hp -= 50;
-        }
-    }
-
-
-    [PunRPC]
-    public void SetPos()
     {
         for (int i = 0; i < User.instance.Deck.Count; i++)
         {
@@ -61,16 +44,21 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
 
             ownerList.Add(clonePlayer.GetComponent<Playerable>());
-            ownerPlayerableList.Add(clonePlayer.GetComponent<Playerable>());
         }
+    }
 
-        
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            UIManager.instance.pvpTurnTableUIController.photonView.RPC("MoveTurnTable", RpcTarget.All);
+            battleList[2].Hp -= 50;
+        }
     }
 
     [PunRPC]
     public void BattleSet()
     {
-        //Playerable[] temp = FindObjectsOfType<Playerable>();
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
         foreach (Playerable player in ownerList)
         {
@@ -83,8 +71,8 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     IEnumerator WaitCam()
     {
         yield return new WaitForSeconds(7);
-        if(photonView.IsMine)
-            photonView.RPC("BattleSet", RpcTarget.All);
+        if (photonView.IsMine)
+            photonView.RPC("BattleSet", RpcTarget.AllBuffered);
         yield return null;
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
-public class PVPManager : Singleton<PVPManager>
+public class PVPManager : MonoBehaviourPunCallbacks
 {
     public GameObject btnObj;
     public TMP_InputField nameField;
@@ -24,7 +24,7 @@ public class PVPManager : Singleton<PVPManager>
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
-        SceneManager.activeSceneChanged += (Scene1, Scene2) => {  UIManager.instance.MainSceneUI(false); };
+        SceneManager.activeSceneChanged += (Scene1, Scene2) => { Setting();  UIManager.instance.MainSceneUI(false); };
     }
 
     public void JoinRoom()
@@ -90,7 +90,6 @@ public class PVPManager : Singleton<PVPManager>
 
     public void Setting()
     {
-        if(photonView.IsMine)
-            PhotonNetwork.Instantiate("PlayerPoints", new Vector3(-6.63f, 1.17f, 0.1f), Quaternion.identity);
+        PhotonNetwork.Instantiate("PlayerPoints", new Vector3(-6.63f, 1.17f, 0.1f), Quaternion.identity);
     }
 }

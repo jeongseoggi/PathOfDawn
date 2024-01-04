@@ -69,7 +69,6 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
             {
                 if (PVPBattleManager.instance.battleList.Count > 0)
                     photonView.RPC("OnDieTurnTable", RpcTarget.All, PVPBattleManager.instance.battleList[index].GetComponent<PhotonView>().ViewID);
-                    //OnDieTurnTable(PVPBattleManager.instance.battleList[index]);
             };
         }
     }
