@@ -24,7 +24,7 @@ public class PVPManager : Singleton<PVPManager>
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
-        SceneManager.activeSceneChanged += (Scene1, Scene2) => { Setting(); UIManager.instance.MainSceneUI(false); };
+        SceneManager.activeSceneChanged += (Scene1, Scene2) => {  UIManager.instance.MainSceneUI(false); };
     }
 
     public void JoinRoom()
@@ -90,23 +90,7 @@ public class PVPManager : Singleton<PVPManager>
 
     public void Setting()
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(photonView.IsMine)
             PhotonNetwork.Instantiate("PlayerPoints", new Vector3(-6.63f, 1.17f, 0.1f), Quaternion.identity);
     }
-    
-    //public void PlayerInstantiate()
-    //{
-    //    foreach (Playerable player in User.instance.Deck)
-    //    {
-    //        string[] cloneStr = player.gameObject.name.Split('(');
-    //        GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
-    //        clonePlayer.GetComponent<Playerable>().DeepCopy(player);
-
-    //        if (PhotonNetwork.IsMasterClient)
-    //            masterPlayerList.Add(clonePlayer.GetComponent<Playerable>());
-    //        else
-    //            otherPlayerList.Add(clonePlayer.GetComponent<Playerable>());
-    //        battleList.Add(clonePlayer.GetComponent<Playerable>());
-    //    }
-    //}
 }

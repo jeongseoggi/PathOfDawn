@@ -31,7 +31,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
     void Init()
     {
-        if(photonView.IsMine)
             photonView.RPC("SetPos", RpcTarget.All);
     }
 
@@ -48,7 +47,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     [PunRPC]
     public void SetPos()
     {
-      
         for (int i = 0; i < User.instance.Deck.Count; i++)
         {
             string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
@@ -65,14 +63,16 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
             ownerList.Add(clonePlayer.GetComponent<Playerable>());
             ownerPlayerableList.Add(clonePlayer.GetComponent<Playerable>());
         }
+
+        
     }
 
     [PunRPC]
     public void BattleSet()
     {
-        Playerable[] temp = FindObjectsOfType<Playerable>();
+        //Playerable[] temp = FindObjectsOfType<Playerable>();
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
-        foreach (Playerable player in temp)
+        foreach (Playerable player in ownerList)
         {
             battleList.Add(player);
         }

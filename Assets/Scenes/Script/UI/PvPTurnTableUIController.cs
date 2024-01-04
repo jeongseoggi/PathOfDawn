@@ -34,7 +34,6 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
         {
             if (onDieChangeCoQueue.Count > 0)
             {
-                Debug.Log(onDieChangeCoQueue.Count);
                 yield return StartCoroutine(onDieChangeCoQueue.Dequeue());
 
             }
