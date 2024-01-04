@@ -47,7 +47,6 @@ public class Playerable : Character, IPunObservable
 
             if (hp <= 0 && isDie == false)
             {
-                Debug.Log("Die");
                 OnDie();
             }
             if (hp > MaxHp) hp = MaxHp;
