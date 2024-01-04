@@ -10,19 +10,7 @@ public class TurnTableUIController : MonoBehaviour
     public List<GameObject> images;
     public List<Vector3> imagesPos;
     public Vector3[] imgPrevPos;
-    public bool isRunCo = false;
-
-    public int callIndex = 0;
-    public int dieCount;
-    public int CallIndex
-    {
-        get => callIndex;
-        set
-        {
-            callIndex = value;
-        }
-    }
-
+ 
     public Queue<IEnumerator> onDieChangeCoQueue;
 
     private void Start()
@@ -42,13 +30,10 @@ public class TurnTableUIController : MonoBehaviour
         {
             if (onDieChangeCoQueue.Count > 0)
             {
-                isRunCo = true;
-                Debug.Log(onDieChangeCoQueue.Count);
-                yield return StartCoroutine(onDieChangeCoQueue.Dequeue());
+                yield return StartCoroutine(onDieChangeCoQueue.Dequeue()); //Dequeue로 빠진 코루틴이 실행이 끝나면 다음 코루틴 실행
 
             }
             yield return null;
-            isRunCo = false;
         }
     }
 
@@ -57,38 +42,34 @@ public class TurnTableUIController : MonoBehaviour
         StartCoroutine(QueueControlCo());
         for (int i = 0; i < BattleManager.instance.BattleCharacterList.Count; i++)
         {
-            images.Add(transform.GetChild(i).gameObject);
-            images[i].GetComponent<TurnIcon>().owner = BattleManager.instance.BattleCharacterList[i];
-            if (imgPrevPos[BattleManager.instance.BattleCharacterList.Count - 1] == Vector3.zero)
-                imgPrevPos[i] = images[i].transform.position;
-        }
-
-        for (int i = 0; i < BattleManager.instance.BattleCharacterList.Count; i++)
-        {
             int index = i;
-            imagesPos.Add(imgPrevPos[i]);
+            images.Add(transform.GetChild(i).gameObject); //이 오브젝트 자식들을 List에 넣어줌
+            images[i].GetComponent<TurnIcon>().owner = BattleManager.instance.BattleCharacterList[i]; //각 이미지 슬롯에 주인을 정해줌
+            if (imgPrevPos[BattleManager.instance.BattleCharacterList.Count - 1] == Vector3.zero) //이미지 포지션 배열의 마자막이 Vector3의 zero 즉, 포지션이 정해지지 않았으면
+                imgPrevPos[i] = images[i].transform.position; //이미지 포지션을 같은 인덱스 번호의 이미지 슬롯의 포지션으로 포지션 저장
+
+            imagesPos.Add(imgPrevPos[i]); //List에 저장
             images[i].gameObject.SetActive(true);
-            images[i].transform.GetChild(0).GetComponent<Image>().sprite = BattleManager.instance.BattleCharacterList[i].character_image;
-            BattleManager.instance.BattleCharacterList[index].OnDie += () =>
+            images[i].transform.GetChild(0).GetComponent<Image>().sprite = BattleManager.instance.BattleCharacterList[i].character_image; //이미지 슬롯에 캐릭터의 이미지 띄워주기
+            BattleManager.instance.BattleCharacterList[index].OnDie += () => //캐릭터가 죽었을 때 엮어주기
             {
                 if (BattleManager.instance.BattleCharacterList.Count > 0)
                     OnDieTurnTable(BattleManager.instance.BattleCharacterList[index]);
             };
+
         }
     }
-    public void MoveTurnTable()
+    public void MoveTurnTable() // 턴 이동 함수
     {
-        Debug.Log("무브함수 호출");
-        //CallIndex++;
         GameObject c = images[0].GetComponentInParent<Transform>().gameObject;
-        images.RemoveAt(0);
+        //List의 맨 앞 지우고 맨 뒤로 넣어주기 ex) 1->2->3 ---> 2->3->1
+        images.RemoveAt(0); 
         images.Add(c);
 
         int index = 0;
         foreach (GameObject t in images)
         {
-            //onDieChangeCoQueue.Enqueue(ChangeCO(index, t));
-            StartCoroutine(ChangeCO(index, t));
+            StartCoroutine(ChangeCO(index, t)); //이미지 슬롯을 Lerp를 통해 이동 시켜주는 코루틴
             index++;
             if (index >= imagesPos.Count)
                 break;
@@ -96,72 +77,33 @@ public class TurnTableUIController : MonoBehaviour
     }
 
 
-    public void OnDieTurnTable(Character c)
+    public void OnDieTurnTable(Character c) //캐릭터가 죽었을 때 호출되는 함수
     {
         int removeIndex = 0;
         foreach (GameObject go in images)
         {
-            if (go.GetComponent<TurnIcon>().owner == c)
+            if (go.GetComponent<TurnIcon>().owner == c) //반복하여 이미지 슬롯 주인 찾기(죽은 캐릭터)
             {
                 go.SetActive(false);
-                images.RemoveAt(removeIndex); //가정 3
-                onDieChangeCoQueue.Enqueue(ChangeCO(removeIndex, go));
+                images.RemoveAt(removeIndex);
+                onDieChangeCoQueue.Enqueue(ChangeCO(removeIndex, go)); //코루틴 큐에 넣어주기
                 break;
             }
             removeIndex++;
         }
     }
 
-    //public void OnDieTurnTable(int removeTargetIndex)
-    //{
-    //    Debug.Log("다이함수 호출");
-    //    Debug.Log(removeTargetIndex);
-
-    //    if (BattleManager.instance.MonsterCount <= 0)
-    //        return;
-    //    if (CallIndex >= images.Count)
-    //        CallIndex = 0;
-
-    //    if (removeTargetIndex <= -1)
-    //    {
-    //        int newIndex = images.Count - (Mathf.Abs(removeTargetIndex));
-    //        images[newIndex].gameObject.SetActive(false);
-    //        images.RemoveAt(newIndex);
-    //        imagesPos.RemoveAt(imagesPos.Count - 1);
-
-    //        for (int i = newIndex; i < images.Count; i++) //A B C D E F ->  B C E F A
-    //        {
-    //            onDieChangeCoQueue.Enqueue(ChangeCO(i, images[i]));
-    //            // StartCoroutine(ChangeCO(i, images[i]));
-    //        }
-    //    }
-    //    else
-    //    {
-    //        images[removeTargetIndex].gameObject.SetActive(false);
-    //        images.RemoveAt(removeTargetIndex);
-    //        imagesPos.RemoveAt(imagesPos.Count - 1);
-    //        for (int i = removeTargetIndex; i < images.Count; i++)
-    //        {
-    //            onDieChangeCoQueue.Enqueue(ChangeCO(i, images[i]));
-    //            //StartCoroutine(ChangeCO(i, images[i]));
-    //        }
-    //    }
-
-
-    //}
-
     IEnumerator ChangeCO(int i, GameObject image)
     {
-        while (Vector3.Distance(image.transform.position, imagesPos[i]) >= 0.1f)
+        while (Vector3.Distance(image.transform.position, imagesPos[i]) >= 0.1f) //해당 이미지를 해당 포지션으로 이동할 때 까지 반복
         {
             image.transform.position
                = Vector3.Lerp(image.transform.position, imagesPos[i], Time.deltaTime * 5.0f);
             yield return new WaitForSeconds(0.01f);
         }
-        Debug.Log(i + "Done");
     }
 
-    public void Clear()
+    public void Clear() //스테이지가 끝난 후 비워줘야 함
     {
         images.Clear();
         imagesPos.Clear();
@@ -170,7 +112,6 @@ public class TurnTableUIController : MonoBehaviour
 
     private void OnDisable()
     {
-        CallIndex = 0;
         if (images.Count > 0)
         {
             int index = 0;
