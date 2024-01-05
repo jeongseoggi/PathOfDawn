@@ -16,16 +16,17 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     public Queue<IEnumerator> onDieChangeCoQueue;
 
     public Dictionary<int, Playerable> viewDic = new Dictionary<int, Playerable>();
+    
 
     private void Start()
     {
         UIManager.instance.pvpTurnTableUIController = this;
         imagesPos = new List<Vector3>();
         imgPrevPos = new Vector3[6];
-
         gameObject.SetActive(false);
         onDieChangeCoQueue = new Queue<IEnumerator>();
     }
+
 
 
     IEnumerator QueueControlCo()
@@ -44,9 +45,9 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void Init()
     {
-        StartCoroutine(QueueControlCo());
         for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
         {
+            int index = i;
             images.Add(transform.GetChild(i).gameObject);
             images[i].GetComponent<TurnIcon>().owner = PVPBattleManager.instance.battleList[i];
             if (imgPrevPos[PVPBattleManager.instance.battleList.Count - 1] == Vector3.zero)
@@ -57,11 +58,7 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
                 viewDic.Add(PVPBattleManager.instance.battleList[i].GetComponent<PhotonView>().ViewID, 
                     PVPBattleManager.instance.battleList[i]);
             }
-        }
 
-        for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
-        {
-            int index = i;
             imagesPos.Add(imgPrevPos[i]);
             images[i].gameObject.SetActive(true);
             images[i].transform.GetChild(0).GetComponent<Image>().sprite = PVPBattleManager.instance.battleList[i].character_image;
@@ -70,6 +67,7 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
                 if (PVPBattleManager.instance.battleList.Count > 0)
                     photonView.RPC("OnDieTurnTable", RpcTarget.All, PVPBattleManager.instance.battleList[index].GetComponent<PhotonView>().ViewID);
             };
+
         }
     }
     [PunRPC]

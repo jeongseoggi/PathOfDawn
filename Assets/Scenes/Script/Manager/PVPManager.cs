@@ -9,22 +9,24 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
-public class PVPManager : MonoBehaviourPunCallbacks
+public class PVPManager : Singleton<PVPManager>
 {
     public GameObject btnObj;
     public TMP_InputField nameField;
     public GameObject matchingPanel;
-    public List<Playerable> battleList;
+    public Dictionary<int, Playerable> playerDic;
+    public int[] battleList;
 
 
     public void Start()
     {
         //포톤 신동기화 
-        battleList = new List<Playerable>();
+        playerDic = new Dictionary<int, Playerable>();
+        battleList = new int[3];
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
-        SceneManager.activeSceneChanged += (Scene1, Scene2) => { Setting();  UIManager.instance.MainSceneUI(false); };
+        SceneManager.activeSceneChanged += (Scene1, Scene2) => { if (photonView.IsMine) photonView.RPC("Setting", RpcTarget.All);  UIManager.instance.MainSceneUI(false); };
     }
 
     public void JoinRoom()
@@ -88,8 +90,26 @@ public class PVPManager : MonoBehaviourPunCallbacks
         Debug.Log(otherPlayer.NickName + "이 방을 나갔습니다.");
     }
 
+    [PunRPC]
     public void Setting()
     {
-        PhotonNetwork.Instantiate("PlayerPoints", new Vector3(-6.63f, 1.17f, 0.1f), Quaternion.identity);
+        for (int i = 0; i < User.instance.Deck.Count; i++)
+        {
+            string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
+            GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
+            clonePlayer.GetComponent<Character>().DeepCopy(User.instance.Deck[i]);
+
+
+            playerDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, clonePlayer.GetComponent<Playerable>());
+            battleList[i] = clonePlayer.GetComponent<PhotonView>().ViewID;
+            //Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
+            //clonePlayer.transform.position = playerPos[i].position;
+            //if (PhotonNetwork.IsMasterClient)
+            //    clonePlayer.transform.LookAt(otherPlayerPos[i]);
+            //else
+            //    clonePlayer.transform.LookAt(masterPlayerPos[i]);
+            //dic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, clonePlayer.GetComponent<Playerable>());
+            //ownerList[i] = clonePlayer.GetComponent<PhotonView>().ViewID;
+        }
     }
 }

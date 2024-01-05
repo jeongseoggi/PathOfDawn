@@ -35,16 +35,16 @@ MonoBehaviour:
   StartInOfflineMode: 0
   RpcList:
   - SetPos
+  - BattleSet
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - AddList
   - Init
   - MoveTurnTable
-  - BattleSet
   - OnDieTurnTable
+  - Setting
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
