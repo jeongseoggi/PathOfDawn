@@ -2,8 +2,6 @@ using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
@@ -15,18 +13,16 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
 
     public Queue<IEnumerator> onDieChangeCoQueue;
 
-    public Dictionary<int, Playerable> viewDic = new Dictionary<int, Playerable>();
-    
 
     private void Start()
     {
         UIManager.instance.pvpTurnTableUIController = this;
         imagesPos = new List<Vector3>();
         imgPrevPos = new Vector3[6];
+
         gameObject.SetActive(false);
         onDieChangeCoQueue = new Queue<IEnumerator>();
     }
-
 
 
     IEnumerator QueueControlCo()
@@ -45,29 +41,26 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void Init()
     {
+        StartCoroutine(QueueControlCo());
+        for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
+        {
+            images.Add(transform.GetChild(i).gameObject);
+            images[i].GetComponent<TurnIcon>().owner = PhotonView.Find(PVPBattleManager.instance.battleList[i]).GetComponent<Playerable>();
+            if (imgPrevPos[PVPBattleManager.instance.battleList.Count - 1] == Vector3.zero)
+                imgPrevPos[i] = images[i].transform.position;
+        }
+
         for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
         {
             int index = i;
-            images.Add(transform.GetChild(i).gameObject);
-            images[i].GetComponent<TurnIcon>().owner = PVPBattleManager.instance.battleList[i];
-            if (imgPrevPos[PVPBattleManager.instance.battleList.Count - 1] == Vector3.zero)
-                imgPrevPos[i] = images[i].transform.position;
-
-            if (!viewDic.ContainsKey(PVPBattleManager.instance.battleList[i].GetComponent<PhotonView>().ViewID))
-            {
-                viewDic.Add(PVPBattleManager.instance.battleList[i].GetComponent<PhotonView>().ViewID, 
-                    PVPBattleManager.instance.battleList[i]);
-            }
-
             imagesPos.Add(imgPrevPos[i]);
             images[i].gameObject.SetActive(true);
-            images[i].transform.GetChild(0).GetComponent<Image>().sprite = PVPBattleManager.instance.battleList[i].character_image;
-            PVPBattleManager.instance.battleList[index].OnDie += () =>
+            images[i].transform.GetChild(0).GetComponent<Image>().sprite = PhotonView.Find(PVPBattleManager.instance.battleList[i]).GetComponent<Playerable>().character_image;
+            PhotonView.Find(PVPBattleManager.instance.battleList[index]).GetComponent<Playerable>().OnDie += () =>
             {
                 if (PVPBattleManager.instance.battleList.Count > 0)
-                    photonView.RPC("OnDieTurnTable", RpcTarget.All, PVPBattleManager.instance.battleList[index].GetComponent<PhotonView>().ViewID);
+                    photonView.RPC("OnDieTurnTable", RpcTarget.All, PhotonView.Find(PVPBattleManager.instance.battleList[index]).GetComponent<PhotonView>().ViewID);
             };
-
         }
     }
     [PunRPC]
@@ -90,11 +83,11 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void OnDieTurnTable(int id)
     {
-        Character c = viewDic[id];
+        Playerable diePlayer = PhotonView.Find(id).GetComponent<Playerable>();
         int removeIndex = 0;
         foreach (GameObject go in images)
         {
-            if (go.GetComponent<TurnIcon>().owner == c)
+            if (go.GetComponent<TurnIcon>().owner == diePlayer)
             {
                 go.SetActive(false);
                 images.RemoveAt(removeIndex); //°¡Á¤ 3

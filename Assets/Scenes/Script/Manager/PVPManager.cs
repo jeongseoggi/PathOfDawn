@@ -26,7 +26,7 @@ public class PVPManager : Singleton<PVPManager>
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = "1";
         PhotonNetwork.ConnectUsingSettings();
-        SceneManager.activeSceneChanged += (Scene1, Scene2) => { if (photonView.IsMine) photonView.RPC("Setting", RpcTarget.All);  UIManager.instance.MainSceneUI(false); };
+        SceneManager.activeSceneChanged += (Scene1, Scene2) => { UIManager.instance.MainSceneUI(false); };
     }
 
     public void JoinRoom()

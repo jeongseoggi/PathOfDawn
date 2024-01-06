@@ -7,9 +7,8 @@ using UnityEngine.UIElements;
 
 public class PVPBattleManager : MonoBehaviourPunCallbacks
 {
+    public static List<Playerable> ownerList = new List<Playerable>();
     public static PVPBattleManager instance;
-    public int[] ownerList;
-    public int[] test;
 
     [SerializeField]
     Transform[] masterPlayerPos;
@@ -18,29 +17,104 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
     public List<Playerable> ownerPlayerableList;
     public List<Playerable> otherPlayerableList;
-    public List<Playerable> battleList;
+    public List<int> battleList;
 
+    public Dictionary<int, Playerable> masterDic;
+    public Dictionary<int, Playerable> clientDic;
 
-    public Dictionary<int, Playerable> dic = new Dictionary<int, Playerable>();
+    public string[] names = new string[3] { "Player_Wizard", "Player_Archer", "Player_Warrior" };
     void Start()
     {
         instance = this;
-        ownerList = new int[3];
-        test = new int[6];
+
         ownerPlayerableList = new List<Playerable>();
         otherPlayerableList = new List<Playerable>();
-        battleList = new List<Playerable>();
-        if (photonView.IsMine)
+        masterDic = new Dictionary<int, Playerable>();
+        clientDic = new Dictionary<int, Playerable>();
+
+        battleList = new List<int>();
+
+        if(photonView.IsMine)
             photonView.RPC("Init", RpcTarget.All);
-        StartCoroutine(WaitCam());
     }
 
 
     [PunRPC]
     void Init()
     {
-        for (int i = 0; i < PVPManager.instance.battleList.Length; i++)
-            test[i] = PVPManager.instance.battleList[i];
+        for(int i = 0; i < 3; i++)
+        {
+            string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
+            GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
+            Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
+            clonePlayer.transform.position = playerPos[i].position;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                clonePlayer.transform.LookAt(otherPlayerPos[i]);
+                masterDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, User.instance.Deck[i]);
+            }
+            else
+            {
+                clonePlayer.transform.LookAt(masterPlayerPos[i]);
+                clientDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, User.instance.Deck[i]);
+            }
+
+            photonView.RPC("Test", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID);
+        }
+        if(photonView.IsMine)
+            photonView.RPC("Copy", RpcTarget.AllViaServer);
+    }
+    [PunRPC]
+    public void Test(int id)
+    {
+        battleList.Add(id);
+    }
+    [PunRPC]
+    public void Copy()
+    {
+        foreach(KeyValuePair<int, Playerable> kv in masterDic)
+        {
+            Debug.Log("마스터" + kv.Key);
+        }
+        foreach (KeyValuePair<int, Playerable> kv in clientDic)
+        {
+            Debug.Log("클라" + kv.Key);
+        }
+        foreach (int id in battleList)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                PhotonView.Find(id).GetComponent<Playerable>().DeepCopy(masterDic[id]);
+            else
+                PhotonView.Find(id).GetComponent<Playerable>().DeepCopy(clientDic[id]);
+        }
+    }
+
+
+    [PunRPC]
+    public void Sort()
+    {
+        int rootIndex = 0;
+        int index = 0;
+
+        while (rootIndex < battleList.Count)
+        {
+            if (PhotonView.Find(battleList[rootIndex]).GetComponent<Playerable>().Speed >
+                PhotonView.Find(battleList[index]).GetComponent<Playerable>().Speed)
+            {
+                int temp = battleList[rootIndex];
+                battleList[rootIndex] = battleList[index];
+                battleList[index] = temp;
+            }
+            index++;
+
+            if (index == battleList.Count)
+            {
+                index = 0;
+                rootIndex++;
+            }
+
+        }
+
     }
 
     private void Update()
@@ -48,37 +122,24 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Space))
         {
             UIManager.instance.pvpTurnTableUIController.photonView.RPC("MoveTurnTable", RpcTarget.All);
-            battleList[2].Hp -= 50;
         }
     }
+
+
+
 
     [PunRPC]
     public void BattleSet()
     {
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
-        int index = 0;
-        foreach(int e in ownerList)
-        {
-            test[index] = e;
-            index++;
-        }
-
-        for(int i = 0; i < dic.Count; i++)
-        {
-            battleList.Add(dic[ownerList[i]]);
-        }
-
-
-
-        battleList.Sort();
         UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("Init", RpcTarget.All);
     }
 
     IEnumerator WaitCam()
     {
-        yield return new WaitForSeconds(10);
-        if(photonView.IsMine)
-            photonView.RPC("BattleSet", RpcTarget.All);
+        yield return new WaitForSeconds(7);
+        if (photonView.IsMine)
+            photonView.RPC("BattleSet", RpcTarget.AllBuffered);
         yield return null;
     }
 }

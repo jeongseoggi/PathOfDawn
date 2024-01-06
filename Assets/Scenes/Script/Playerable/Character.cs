@@ -61,6 +61,7 @@ public class Character : MonoBehaviourPun, IComparable<Character>
 
     public void DeepCopy(Character original)
     {
+        Debug.Log("dsad");
         job = original.job;
         hp = original.hp;
         maxHp = original.maxHp;
@@ -72,5 +73,27 @@ public class Character : MonoBehaviourPun, IComparable<Character>
         speed = original.speed;
         aggro = original.aggro;
         level = original.level;
+    }
+
+    [PunRPC]
+    public void DeepCopy(int id)
+    {
+        foreach (Character character in User.instance.Deck)
+        {
+            if (character.job.Equals(PhotonView.Find(id).GetComponent<Character>().job))
+            {
+                PhotonView.Find(id).GetComponent<Character>().job = character.job;
+                PhotonView.Find(id).GetComponent<Character>().hp = character.hp;
+                PhotonView.Find(id).GetComponent<Character>().maxHp = character.maxHp;
+                PhotonView.Find(id).GetComponent<Character>().atk = character.atk;
+                PhotonView.Find(id).GetComponent<Character>().def = character.def;
+                PhotonView.Find(id).GetComponent<Character>().dodge = character.dodge;
+                PhotonView.Find(id).GetComponent<Character>().mp = character.mp;
+                PhotonView.Find(id).GetComponent<Character>().maxMp = character.maxMp;
+                PhotonView.Find(id).GetComponent<Character>().speed = character.speed;
+                PhotonView.Find(id).GetComponent<Character>().aggro = character.aggro;
+                PhotonView.Find(id).GetComponent<Character>().level = character.level;
+            }
+        }
     }
 }

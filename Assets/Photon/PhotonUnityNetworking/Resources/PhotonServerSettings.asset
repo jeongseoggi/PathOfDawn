@@ -34,17 +34,21 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - SetPos
+  - BattleListAdd
   - BattleSet
   - ClickRpc
+  - DeepCopy
   - DestroyRpc
   - DestroySpaceship
   - Fire
-  - RespawnSpaceship
   - Init
   - MoveTurnTable
   - OnDieTurnTable
+  - RespawnSpaceship
   - Setting
+  - Sort
+  - Test
+  - Copy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
