@@ -552,9 +552,11 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 1
+  OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 3139967897052476275}
+  - {fileID: -4196062782829019946}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

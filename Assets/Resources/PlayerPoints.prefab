@@ -79,8 +79,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d2670cb4aee194696f818ea45944b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownerList: 
-  test: 000000000000000000000000000000000000000000000000
   masterPlayerPos:
   - {fileID: 1396387834287673190}
   - {fileID: 1396387833660562668}
@@ -91,7 +89,7 @@ MonoBehaviour:
   - {fileID: 1396387834007211462}
   ownerPlayerableList: []
   otherPlayerableList: []
-  battleList: []
+  battleList: 
 --- !u!114 &1396387833306655918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,7 +106,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 1
-  OwnershipTransfer: 1
+  OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
   - {fileID: 9070843252166010319}

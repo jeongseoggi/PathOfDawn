@@ -33,55 +33,67 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
         if(photonView.IsMine)
             photonView.RPC("Init", RpcTarget.All);
 
-        photonView.RPC("TT", RpcTarget.AllViaServer);
+        StartCoroutine(WaitCam());
     }
 
 
     [PunRPC]
     void Init()
     {
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
             GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
+            ownerPlayerableList.Add(User.instance.Deck[i]);
             Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
             clonePlayer.transform.position = playerPos[i].position;
-            if (PhotonNetwork.IsMasterClient)
+            if (clonePlayer.GetComponent<PhotonView>().IsMine)
             {
                 clonePlayer.transform.LookAt(otherPlayerPos[i]);
-                masterDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, User.instance.Deck[i]);
             }
             else
             {
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
-                clientDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, User.instance.Deck[i]);
             }
-            photonView.RPC("Test", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID);
+            photonView.RPC("Test", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID, i);
         }
-
     }
+
     [PunRPC]
-    public void Test(int id)
+    public void Test(int id, int index)
     {
         battleList.Add(id);
+        if (PhotonNetwork.IsMasterClient)
+            masterDic.Add(id, User.instance.Deck[index]);
+        else
+            clientDic.Add(id, User.instance.Deck[index]);
     }
 
     [PunRPC]
     public void TT()
     {
-        Debug.Log(battleList.Count);
-        for(int i = 0; i< battleList.Count; i++)
+        for (int i = 0; i< battleList.Count; i++)
         {
-            if (PhotonView.Find(battleList[i]).IsMine)
-                PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(User.instance.Deck[i]);
+            if(PhotonView.Find(battleList[i]).IsMine)
+            {
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    Debug.Log("ÇöÀç ÀÎµ¦½º" + i + "Æ÷Åæºä ¾ÆÀÌµð" + battleList[i] + "¼ÒÀ¯ÁÖ(t/f) :" + photonView.IsMine);
+                    PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
+                }
+                else
+                {
+                    Debug.Log("ÇöÀç ÀÎµ¦½º" + i + "Æ÷Åæºä ¾ÆÀÌµð" + battleList[i] + "¼ÒÀ¯ÁÖ(t/f) :" + photonView.IsMine);
+                    PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(clientDic[battleList[i]]);
+                }
+            }
         }
     }
-   
-
 
     [PunRPC]
     public void Sort()
     {
+        Debug.Log(battleList.Count);
         int rootIndex = 0;
         int index = 0;
 
@@ -126,7 +138,10 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
     IEnumerator WaitCam()
     {
-        yield return new WaitForSeconds(7);
+        yield return new WaitForSeconds(3);
+        photonView.RPC("TT", RpcTarget.All);
+        yield return new WaitForSeconds(4);
+        photonView.RPC("Sort", RpcTarget.All);
         if (photonView.IsMine)
             photonView.RPC("BattleSet", RpcTarget.AllBuffered);
         yield return null;

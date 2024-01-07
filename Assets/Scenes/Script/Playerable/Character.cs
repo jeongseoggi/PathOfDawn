@@ -62,17 +62,17 @@ public class Character : MonoBehaviourPun, IComparable<Character>
     public void DeepCopy(Character original)
     {
         Debug.Log("dsad");
-        job = original.job;
-        hp = original.hp;
-        maxHp = original.maxHp;
-        atk = original.atk;
-        def = original.def;
-        dodge = original.dodge;
-        mp = original.mp;
+        Job= original.job;
+        Hp = original.hp;
+        MaxHp = original.maxHp;
+        Atk= original.atk;
+        Def = original.def;
+        Dodge = original.dodge;
+        Mp =  original.mp;
         maxMp = original.maxMp;
-        speed = original.speed;
-        aggro = original.aggro;
-        level = original.level;
+        Speed = original.speed;
+        Aggro = original.aggro;
+        Level = original.level;
     }
 
     [PunRPC]

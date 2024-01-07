@@ -258,7 +258,7 @@ public class Playerable : Character, IPunObservable
             stream.SendNext(Aggro);
             stream.SendNext(Level);
         }
-        if (stream.IsReading)
+        else
         {
             Hp = (float)stream.ReceiveNext();
             Job = (string)stream.ReceiveNext();
@@ -270,6 +270,5 @@ public class Playerable : Character, IPunObservable
             Aggro = (int)stream.ReceiveNext();
             Level = (int)stream.ReceiveNext();
         }
-
     }
 }
