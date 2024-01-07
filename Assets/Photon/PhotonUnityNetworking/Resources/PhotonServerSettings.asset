@@ -29,13 +29,11 @@ MonoBehaviour:
     EnableLobbyStatistics: 0
     NetworkLogging: 1
   DevRegion: kr
-  PunLogging: 0
+  PunLogging: 2
   EnableSupportLogger: 1
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - BattleListAdd
-  - BattleSet
   - ClickRpc
   - DeepCopy
   - DestroyRpc
@@ -45,10 +43,9 @@ MonoBehaviour:
   - MoveTurnTable
   - OnDieTurnTable
   - RespawnSpaceship
-  - Setting
   - Sort
   - Test
-  - Copy
+  - TT
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

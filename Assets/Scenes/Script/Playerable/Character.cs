@@ -80,7 +80,7 @@ public class Character : MonoBehaviourPun, IComparable<Character>
     {
         foreach (Character character in User.instance.Deck)
         {
-            if (character.job.Equals(PhotonView.Find(id).GetComponent<Character>().job))
+            if (character.Job == PhotonView.Find(id).GetComponent<Playerable>().Job)
             {
                 PhotonView.Find(id).GetComponent<Character>().job = character.job;
                 PhotonView.Find(id).GetComponent<Character>().hp = character.hp;

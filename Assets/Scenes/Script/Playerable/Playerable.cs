@@ -247,8 +247,29 @@ public class Playerable : Character, IPunObservable
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
+        {
             stream.SendNext(Hp);
+            stream.SendNext(Job);
+            stream.SendNext(Atk);
+            stream.SendNext(Def);
+            stream.SendNext(Dodge);
+            stream.SendNext(Mp);
+            stream.SendNext(Speed);
+            stream.SendNext(Aggro);
+            stream.SendNext(Level);
+        }
         if (stream.IsReading)
+        {
             Hp = (float)stream.ReceiveNext();
+            Job = (string)stream.ReceiveNext();
+            Atk = (float)stream.ReceiveNext();
+            Def = (float)stream.ReceiveNext();
+            Dodge = (int)stream.ReceiveNext();
+            Mp = (float)stream.ReceiveNext();
+            Speed = (int)stream.ReceiveNext();
+            Aggro = (int)stream.ReceiveNext();
+            Level = (int)stream.ReceiveNext();
+        }
+
     }
 }

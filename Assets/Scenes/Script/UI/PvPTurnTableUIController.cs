@@ -9,7 +9,7 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     public List<GameObject> images;
     public List<Vector3> imagesPos;
     public Vector3[] imgPrevPos;
-
+    public PVPBattleManager pb;
 
     public Queue<IEnumerator> onDieChangeCoQueue;
 
@@ -42,24 +42,24 @@ public class PvPTurnTableUIController : MonoBehaviourPunCallbacks
     public void Init()
     {
         StartCoroutine(QueueControlCo());
-        for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
+        for (int i = 0; i < pb.battleList.Count; i++)
         {
             images.Add(transform.GetChild(i).gameObject);
-            images[i].GetComponent<TurnIcon>().owner = PhotonView.Find(PVPBattleManager.instance.battleList[i]).GetComponent<Playerable>();
-            if (imgPrevPos[PVPBattleManager.instance.battleList.Count - 1] == Vector3.zero)
+            images[i].GetComponent<TurnIcon>().owner = PhotonView.Find(pb.battleList[i]).GetComponent<Playerable>();
+            if (imgPrevPos[pb.battleList.Count - 1] == Vector3.zero)
                 imgPrevPos[i] = images[i].transform.position;
         }
 
-        for (int i = 0; i < PVPBattleManager.instance.battleList.Count; i++)
+        for (int i = 0; i < pb.battleList.Count; i++)
         {
             int index = i;
             imagesPos.Add(imgPrevPos[i]);
             images[i].gameObject.SetActive(true);
-            images[i].transform.GetChild(0).GetComponent<Image>().sprite = PhotonView.Find(PVPBattleManager.instance.battleList[i]).GetComponent<Playerable>().character_image;
-            PhotonView.Find(PVPBattleManager.instance.battleList[index]).GetComponent<Playerable>().OnDie += () =>
+            images[i].transform.GetChild(0).GetComponent<Image>().sprite = PhotonView.Find(pb.battleList[i]).GetComponent<Playerable>().character_image;
+            PhotonView.Find(pb.battleList[index]).GetComponent<Playerable>().OnDie += () =>
             {
-                if (PVPBattleManager.instance.battleList.Count > 0)
-                    photonView.RPC("OnDieTurnTable", RpcTarget.All, PhotonView.Find(PVPBattleManager.instance.battleList[index]).GetComponent<PhotonView>().ViewID);
+                if (pb.battleList.Count > 0)
+                    photonView.RPC("OnDieTurnTable", RpcTarget.All, PhotonView.Find(pb.battleList[index]).GetComponent<PhotonView>().ViewID);
             };
         }
     }

@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ using UnityEngine.UIElements;
 public class PVPBattleManager : MonoBehaviourPunCallbacks
 {
     public static List<Playerable> ownerList = new List<Playerable>();
-    public static PVPBattleManager instance;
 
     [SerializeField]
     Transform[] masterPlayerPos;
@@ -21,12 +21,8 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, Playerable> masterDic;
     public Dictionary<int, Playerable> clientDic;
-
-    public string[] names = new string[3] { "Player_Wizard", "Player_Archer", "Player_Warrior" };
     void Start()
     {
-        instance = this;
-
         ownerPlayerableList = new List<Playerable>();
         otherPlayerableList = new List<Playerable>();
         masterDic = new Dictionary<int, Playerable>();
@@ -36,6 +32,8 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
         if(photonView.IsMine)
             photonView.RPC("Init", RpcTarget.All);
+
+        photonView.RPC("TT", RpcTarget.AllViaServer);
     }
 
 
@@ -58,36 +56,27 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
                 clientDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, User.instance.Deck[i]);
             }
-
             photonView.RPC("Test", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID);
         }
-        if(photonView.IsMine)
-            photonView.RPC("Copy", RpcTarget.AllViaServer);
+
     }
     [PunRPC]
     public void Test(int id)
     {
         battleList.Add(id);
     }
+
     [PunRPC]
-    public void Copy()
+    public void TT()
     {
-        foreach(KeyValuePair<int, Playerable> kv in masterDic)
+        Debug.Log(battleList.Count);
+        for(int i = 0; i< battleList.Count; i++)
         {
-            Debug.Log("마스터" + kv.Key);
-        }
-        foreach (KeyValuePair<int, Playerable> kv in clientDic)
-        {
-            Debug.Log("클라" + kv.Key);
-        }
-        foreach (int id in battleList)
-        {
-            if (PhotonNetwork.IsMasterClient)
-                PhotonView.Find(id).GetComponent<Playerable>().DeepCopy(masterDic[id]);
-            else
-                PhotonView.Find(id).GetComponent<Playerable>().DeepCopy(clientDic[id]);
+            if (PhotonView.Find(battleList[i]).IsMine)
+                PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(User.instance.Deck[i]);
         }
     }
+   
 
 
     [PunRPC]
