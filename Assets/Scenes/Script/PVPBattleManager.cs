@@ -40,7 +40,7 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void Init()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < User.instance.Deck.Count; i++)
         {
             string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
             GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
@@ -55,12 +55,12 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
             {
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
             }
-            photonView.RPC("Test", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID, i);
+            photonView.RPC("AddList", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID, i);
         }
     }
 
     [PunRPC]
-    public void Test(int id, int index)
+    public void AddList(int id, int index)
     {
         battleList.Add(id);
         if (PhotonNetwork.IsMasterClient)
@@ -70,7 +70,7 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void TT()
+    public void Copy()
     {
         for (int i = 0; i< battleList.Count; i++)
         {
@@ -139,7 +139,7 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
     IEnumerator WaitCam()
     {
         yield return new WaitForSeconds(3);
-        photonView.RPC("TT", RpcTarget.All);
+        photonView.RPC("Copy", RpcTarget.All);
         yield return new WaitForSeconds(4);
         photonView.RPC("Sort", RpcTarget.All);
         if (photonView.IsMine)
