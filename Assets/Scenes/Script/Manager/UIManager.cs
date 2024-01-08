@@ -18,6 +18,9 @@ public class UIManager : Singleton<UIManager>
 
     // πË∆≤ æ¿ UI
     public PlayerableUIController playerableUIController;
+    public PVPOtherPlayerableUIController otherPlayerUIController;
+    public PVPPlayerableUIController pVpPlayerableUIController;
+    public PVPBehaviorUIController pVpBehaviorUIController;
     public MonsterUIController monsterUIController;
     public BehaviorUIController behaviorUIController;
     public TurnTableUIController turnTableUIController;
@@ -49,6 +52,7 @@ public class UIManager : Singleton<UIManager>
     public void ExitBattleUI()
     {
         playerableUIController.gameObject.SetActive(false);
+        otherPlayerUIController.gameObject.SetActive(false);
         monsterUIController.gameObject.SetActive(false);
         behaviorUIController.gameObject.SetActive(false);
         turnTableUIController.gameObject.SetActive(false);

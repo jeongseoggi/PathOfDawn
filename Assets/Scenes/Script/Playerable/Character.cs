@@ -61,7 +61,6 @@ public class Character : MonoBehaviourPun, IComparable<Character>
 
     public void DeepCopy(Character original)
     {
-        Debug.Log("dsad");
         Job= original.job;
         Hp = original.hp;
         MaxHp = original.maxHp;

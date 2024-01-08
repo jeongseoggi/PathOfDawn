@@ -3,10 +3,11 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PVPBattleManager : MonoBehaviourPunCallbacks
+public class PVPBattleManager : Singleton<PVPBattleManager>
 {
     public static List<Playerable> ownerList = new List<Playerable>();
 
@@ -21,6 +22,37 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, Playerable> masterDic;
     public Dictionary<int, Playerable> clientDic;
+
+    public Camera mainCam;
+
+
+    public GameObject targetSelectEffect;
+    public int curTurnCharacterID;
+    public Playerable targetCharacter;
+    public Playerable TargetCharacter
+    {
+        get => targetCharacter;
+        set
+        {
+            targetCharacter = value;
+
+            if (targetCharacter == null)
+                return;
+
+            if (!targetCharacter.GetComponent<PhotonView>().IsMine)
+            {
+                UIManager.instance.pVpBehaviorUIController.gameObject.SetActive(true);
+                targetSelectEffect.transform.position = targetCharacter.transform.position;
+                targetSelectEffect.SetActive(true);
+            }
+            else
+            {
+                UIManager.instance.behaviorUIController.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public int battleCount = 0;
     void Start()
     {
         ownerPlayerableList = new List<Playerable>();
@@ -78,22 +110,44 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
             {
                 if(PhotonNetwork.IsMasterClient)
                 {
-                    Debug.Log("ÇöÀç ÀÎµ¦½º" + i + "Æ÷Åæºä ¾ÆÀÌµð" + battleList[i] + "¼ÒÀ¯ÁÖ(t/f) :" + photonView.IsMine);
                     PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
                 }
                 else
                 {
-                    Debug.Log("ÇöÀç ÀÎµ¦½º" + i + "Æ÷Åæºä ¾ÆÀÌµð" + battleList[i] + "¼ÒÀ¯ÁÖ(t/f) :" + photonView.IsMine);
                     PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(clientDic[battleList[i]]);
+
                 }
             }
         }
     }
 
     [PunRPC]
+    public void BattleStart()
+    {
+        if (photonView.IsMine)
+        {
+            UIManager.instance.pVpPlayerableUIController.isMaster = true;
+            UIManager.instance.otherPlayerUIController.isMaster = false;
+        }
+        else
+        {
+            UIManager.instance.pVpPlayerableUIController.isMaster = false;
+            UIManager.instance.otherPlayerUIController.isMaster = true;
+        }
+
+
+
+        UIManager.instance.pVpPlayerableUIController.gameObject.SetActive(true);
+        UIManager.instance.otherPlayerUIController.gameObject.SetActive(true);
+        UIManager.instance.pVpPlayerableUIController.Set();
+        UIManager.instance.otherPlayerUIController.Set();
+        curTurnCharacterID = battleList[0]; 
+    }
+
+
+    [PunRPC]
     public void Sort()
     {
-        Debug.Log(battleList.Count);
         int rootIndex = 0;
         int index = 0;
 
@@ -116,24 +170,88 @@ public class PVPBattleManager : MonoBehaviourPunCallbacks
 
         }
 
+        
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0) && PhotonView.Find(battleList[battleCount]).IsMine)
         {
-            UIManager.instance.pvpTurnTableUIController.photonView.RPC("MoveTurnTable", RpcTarget.All);
+            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, float.MaxValue, 1 << 10))
+            {
+                if(!hit.collider.GetComponent<PhotonView>().IsMine)
+                    TargetCharacter = hit.collider.GetComponent<Playerable>();
+            }
         }
     }
-
-
-
 
     [PunRPC]
     public void BattleSet()
     {
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
         UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("Init", RpcTarget.All);
+        BattleStart();
+    }
+
+    public void BattleDamage(float damage, ATTACK_TYPE atkType)
+    {
+        if (TargetCharacter == null)
+            return;
+
+        if (atkType == ATTACK_TYPE.NORMAL || atkType == ATTACK_TYPE.SKILLATK)
+        {
+            int dodgeRandomValue = UnityEngine.Random.Range(0, 100);
+            if (dodgeRandomValue <= TargetCharacter.Dodge)
+                return;
+
+            TargetCharacter.TakeDamage(damage);
+            return;
+        }
+        else if (atkType == ATTACK_TYPE.ULTIMATEATK)
+        {
+            Dictionary<int, Playerable> tagetDic = PhotonNetwork.IsMasterClient ? masterDic : clientDic;
+            if (TargetCharacter.TryGetComponent<Playerable>(out var playerable))
+            {
+                List<Playerable> copyList = new List<Playerable>();
+                foreach (KeyValuePair<int, Playerable> kv in tagetDic)
+                {
+                    copyList.Add(tagetDic[kv.Key]);
+                }
+
+                foreach (Playerable player in copyList)
+                    player?.TakeDamage(damage);
+            }
+        }
+    }
+
+
+
+    public void NextOrder()
+    {
+        if (battleList.Count <= 0)
+            return;
+
+        battleCount++;
+        if (battleCount >= battleList.Count)
+            battleCount = 0;
+
+
+        if (PhotonView.Find(battleList[battleCount]).GetComponent<Playerable>().isDie == true)
+        {
+            NextOrder();
+            return;
+        }
+        curTurnCharacterID = battleList[battleCount];
+
+        StartCoroutine(WaitSeCo());
+    }
+
+    IEnumerator WaitSeCo()
+    {
+        yield return new WaitForSeconds(1.5f);
+        UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("MoveTurnTable", RpcTarget.All);
     }
 
     IEnumerator WaitCam()

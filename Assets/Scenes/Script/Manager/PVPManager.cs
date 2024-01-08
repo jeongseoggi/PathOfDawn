@@ -89,27 +89,4 @@ public class PVPManager : Singleton<PVPManager>
     {
         Debug.Log(otherPlayer.NickName + "이 방을 나갔습니다.");
     }
-
-    [PunRPC]
-    public void Setting()
-    {
-        for (int i = 0; i < User.instance.Deck.Count; i++)
-        {
-            string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
-            GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
-            clonePlayer.GetComponent<Character>().DeepCopy(User.instance.Deck[i]);
-
-
-            playerDic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, clonePlayer.GetComponent<Playerable>());
-            battleList[i] = clonePlayer.GetComponent<PhotonView>().ViewID;
-            //Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
-            //clonePlayer.transform.position = playerPos[i].position;
-            //if (PhotonNetwork.IsMasterClient)
-            //    clonePlayer.transform.LookAt(otherPlayerPos[i]);
-            //else
-            //    clonePlayer.transform.LookAt(masterPlayerPos[i]);
-            //dic.Add(clonePlayer.GetComponent<PhotonView>().ViewID, clonePlayer.GetComponent<Playerable>());
-            //ownerList[i] = clonePlayer.GetComponent<PhotonView>().ViewID;
-        }
-    }
 }
