@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
+using Photon.Pun;
 
 public enum TARGET_TYPE
 {
@@ -62,11 +64,11 @@ public class TargetSkill : Skill
             {
                 if (tarImpact != null)
                 {
-                    PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().impact = tarImpact;
-                    tarImpact.transform.position = PVPBattleManager.instance.TargetCharacter.transform.position;
+                    PhotonView.Find(PVPBattleManager.instance.TargetCharacter).GetComponent<Character>().impact = tarImpact;
+                    tarImpact.transform.position = PhotonView.Find(PVPBattleManager.instance.TargetCharacter).GetComponent<Playerable>().gameObject.transform.position;
                 }
                 else
-                    transform.position = PVPBattleManager.instance.TargetCharacter.transform.position;
+                    transform.position = PhotonView.Find(PVPBattleManager.instance.TargetCharacter).GetComponent<Playerable>().gameObject.transform.position;
             }
             if (type == TARGET_TYPE.FULL)
             {

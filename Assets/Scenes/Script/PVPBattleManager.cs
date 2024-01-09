@@ -6,8 +6,9 @@ using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.Playables;
 
-public class PVPBattleManager : Singleton<PVPBattleManager>
+public class PVPBattleManager : Singleton<PVPBattleManager>, IPunObservable
 {
     [SerializeField]
     Transform[] masterPlayerPos;
@@ -24,21 +25,21 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
     public GameObject targetSelectEffect;
     public int curTurnCharacterID;
-    public Playerable targetCharacter;
-    public Playerable TargetCharacter
+    public int targetCharacter;
+    public int TargetCharacter
     {
         get => targetCharacter;
         set
         {
             targetCharacter = value;
 
-            if (targetCharacter == null)
+            if (targetCharacter == 0)
                 return;
 
-            if (!targetCharacter.GetComponent<PhotonView>().IsMine)
+            if (!PhotonView.Find(targetCharacter).GetComponent<PhotonView>().IsMine)
             {
                 UIManager.instance.pVpBehaviorUIController.gameObject.SetActive(true);
-                targetSelectEffect.transform.position = targetCharacter.transform.position;
+                targetSelectEffect.transform.position = PhotonView.Find(targetCharacter).GetComponent<Playerable>().gameObject.transform.position;
                 targetSelectEffect.SetActive(true);
             }
             else
@@ -91,11 +92,11 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public void AddList(int id, int index)
     {
         battleList.Add(id);
-        if(PhotonView.Find(id).IsMine)
+        if(id > 1000 && id < 2000)
         {
             masterDic.Add(id, PhotonView.Find(id).GetComponent<Playerable>());
         }
-        else
+        else 
             clientDic.Add(id, PhotonView.Find(id).GetComponent<Playerable>());
     }
 
@@ -105,20 +106,24 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
         foreach (KeyValuePair<int, Playerable> kv in masterDic)
         {
             Debug.Log("마스터" + masterDic[kv.Key].Level);
+            Debug.Log(kv.Key);
         }
         foreach (KeyValuePair<int, Playerable> kv in clientDic)
         {
             Debug.Log("클라 : " + clientDic[kv.Key].Level);
+            Debug.Log(kv.Key);
         }
 
         for (int i = 0; i < battleList.Count; i++)
         {
-            if (PhotonView.Find(battleList[i]).Owner.NickName.Equals(PhotonNetwork.MasterClient.NickName))
+            Debug.Log(i);
+            if (battleList[i] > 1000 && battleList[i] < 2000)
             {
                 PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
             }
             else
             {
+                Debug.Log("else" + i);
                 PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(clientDic[battleList[i]]);
             }
         }
@@ -172,7 +177,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
             {
                 Debug.Log(hit.collider.name);
                 if (!hit.collider.GetComponent<PhotonView>().IsMine)
-                    TargetCharacter = hit.collider.GetComponent<Playerable>();
+                    TargetCharacter = hit.collider.GetComponent<PhotonView>().ViewID;
             }
         }
     }
@@ -186,22 +191,22 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
     public void BattleDamage(float damage, ATTACK_TYPE atkType)
     {
-        if (TargetCharacter == null)
+        if (TargetCharacter == 0)
             return;
 
         if (atkType == ATTACK_TYPE.NORMAL || atkType == ATTACK_TYPE.SKILLATK)
         {
             int dodgeRandomValue = UnityEngine.Random.Range(0, 100);
-            if (dodgeRandomValue <= TargetCharacter.Dodge)
+            if (dodgeRandomValue <= PhotonView.Find(TargetCharacter).GetComponent<Playerable>().Dodge)
                 return;
 
-            TargetCharacter.TakeDamage(damage);
+            PhotonView.Find(TargetCharacter).GetComponent<Playerable>().TakeDamage(damage);
             return;
         }
         else if (atkType == ATTACK_TYPE.ULTIMATEATK)
         {
             Dictionary<int, Playerable> tagetDic = PhotonNetwork.IsMasterClient ? masterDic : clientDic;
-            if (TargetCharacter.TryGetComponent<Playerable>(out var playerable))
+            if (PhotonView.Find(TargetCharacter).GetComponent<Playerable>().TryGetComponent<Playerable>(out var playerable))
             {
                 List<Playerable> copyList = new List<Playerable>();
                 foreach (KeyValuePair<int, Playerable> kv in tagetDic)
@@ -255,5 +260,13 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
         BattleStart();
 
         yield return null;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+            stream.SendNext(TargetCharacter);
+        else
+            TargetCharacter = (int)stream.ReceiveNext();
     }
 }

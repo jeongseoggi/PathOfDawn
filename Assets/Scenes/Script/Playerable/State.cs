@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using Photon;
+using Photon.Pun;
 
 public enum STATE //상태 타입
 {
@@ -135,7 +137,7 @@ public class PlayerAttack : PlayerBattleState
             if (player.skill[0].GetComponent<Skill>().battle_type == BATTLE_TYPE.PVE)
                 BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
             else
-                PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
+                PhotonView.Find(PVPBattleManager.instance.TargetCharacter).GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
         }
     }
 
@@ -169,7 +171,7 @@ public class PlayerSkillAttack : PlayerBattleState
             if(player.skill[1].GetComponent<Skill>().battle_type == BATTLE_TYPE.PVE)
                 BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
             else
-                PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
+                PhotonView.Find(PVPBattleManager.instance.TargetCharacter).GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
         }
     }
 
