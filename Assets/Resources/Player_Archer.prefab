@@ -28712,6 +28712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 1.5
+  battle_type: 0
   playerable: {fileID: 0}
   type: 1
   tarImpact: {fileID: 0}
@@ -38517,6 +38518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 1
+  battle_type: 0
   playerable: {fileID: 0}
   type: 1
   tarImpact: {fileID: 0}
@@ -77292,6 +77294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 1.2
+  battle_type: 0
   playerable: {fileID: 0}
   type: 1
   tarImpact: {fileID: 0}
@@ -88813,6 +88816,7 @@ GameObject:
   - component: {fileID: 7771592421496234045}
   - component: {fileID: -2525212160575000105}
   - component: {fileID: -4221748935206553880}
+  - component: {fileID: 3200601694941559511}
   m_Layer: 10
   m_Name: Player_Archer
   m_TagString: Untagged
@@ -88949,6 +88953,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!65 &3200601694941559511
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7771592421496108432}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.9205749, z: 1}
+  m_Center: {x: 0, y: 0.95030975, z: 0}
 --- !u!1 &7771592421496109266
 GameObject:
   m_ObjectHideFlags: 0

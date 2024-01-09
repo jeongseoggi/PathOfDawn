@@ -52,6 +52,7 @@ MonoBehaviour:
   - Copy
   - BattleStart
   - Set
+  - NextOrder
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

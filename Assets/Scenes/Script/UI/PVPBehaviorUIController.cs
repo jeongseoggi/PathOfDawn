@@ -86,7 +86,7 @@ public class PVPBehaviorUIController : MonoBehaviourPunCallbacks
         playerable.sm.SetState(STATE.BATTLE);
         PVPBattleManager.instance.BattleDamage(damage, btnDic[curPressBtn]);
         gameObject.SetActive(false);
-
-        PVPBattleManager.instance.NextOrder();
+        if(PVPBattleManager.instance.photonView.IsMine)
+            PVPBattleManager.instance.GetComponent<PhotonView>().RPC("NextOrder", RpcTarget.All);
     }
 }

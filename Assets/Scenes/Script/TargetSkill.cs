@@ -9,7 +9,6 @@ public enum TARGET_TYPE
     FULL
 }
 
-
 public class TargetSkill : Skill
 {
     public TARGET_TYPE type;
@@ -40,19 +39,40 @@ public class TargetSkill : Skill
 
     public override void Cast()
     {
-        if(type == TARGET_TYPE.SINGLE)
+        if(battle_type == BATTLE_TYPE.PVE)
         {
-            if (tarImpact != null)
+            if(type == TARGET_TYPE.SINGLE)
             {
-                BattleManager.instance.TargetCharacter.GetComponent<Character>().impact = tarImpact;
-                tarImpact.transform.position = BattleManager.instance.TargetCharacter.transform.position;
+                if (tarImpact != null)
+                {
+                    BattleManager.instance.TargetCharacter.GetComponent<Character>().impact = tarImpact;
+                    tarImpact.transform.position = BattleManager.instance.TargetCharacter.transform.position;
+                }
+                else
+                    transform.position = BattleManager.instance.TargetCharacter.transform.position;
             }
-            else
-                transform.position = BattleManager.instance.TargetCharacter.transform.position;
+            if(type == TARGET_TYPE.FULL)
+            {
+                //USER.DECk[1]여기에 파티클 포지션 변경
+            }
         }
-        if(type == TARGET_TYPE.FULL)
+        if(battle_type == BATTLE_TYPE.PVP)
         {
-            //USER.DECk[1]여기에 파티클 포지션 변경
+            if (type == TARGET_TYPE.SINGLE)
+            {
+                if (tarImpact != null)
+                {
+                    PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().impact = tarImpact;
+                    tarImpact.transform.position = PVPBattleManager.instance.TargetCharacter.transform.position;
+                }
+                else
+                    transform.position = PVPBattleManager.instance.TargetCharacter.transform.position;
+            }
+            if (type == TARGET_TYPE.FULL)
+            {
+                //USER.DECk[1]여기에 파티클 포지션 변경
+            }
+
         }
     }
 }

@@ -132,7 +132,10 @@ public class PlayerAttack : PlayerBattleState
             //해당 플레이어블 캐릭터가 가지고 있는 스킬의 해당하는 타입에 따라 공격
             player.skill[0].GetComponent<Skill>().Cast();
             player.skill[0].gameObject.SetActive(true); //해당 게임 오브젝트를 활성화
-            BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[0].GetComponent<Skill>().skillDamage;
+            if (player.skill[0].GetComponent<Skill>().battle_type == BATTLE_TYPE.PVE)
+                BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
+            else
+                PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
         }
     }
 
@@ -163,7 +166,10 @@ public class PlayerSkillAttack : PlayerBattleState
             //스킬 타입에 따라 공격 함수 실행
             player.skill[1].GetComponent<Skill>().Cast();
             player.skill[1].gameObject.SetActive(true);
-            BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
+            if(player.skill[1].GetComponent<Skill>().battle_type == BATTLE_TYPE.PVE)
+                BattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
+            else
+                PVPBattleManager.instance.TargetCharacter.GetComponent<Character>().Hp -= player.skill[1].GetComponent<Skill>().skillDamage;
         }
     }
 

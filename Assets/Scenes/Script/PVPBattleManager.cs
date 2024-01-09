@@ -3,26 +3,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class PVPBattleManager : Singleton<PVPBattleManager>
 {
-    public static List<Playerable> ownerList = new List<Playerable>();
-
     [SerializeField]
     Transform[] masterPlayerPos;
     [SerializeField]
     Transform[] otherPlayerPos;
 
-    public List<Playerable> ownerPlayerableList;
-    public List<Playerable> otherPlayerableList;
     public List<int> battleList;
 
     public Dictionary<int, Playerable> masterDic;
     public Dictionary<int, Playerable> clientDic;
 
     public Camera mainCam;
-
+    public LayerMask layerMask;
 
     public GameObject targetSelectEffect;
     public int curTurnCharacterID;
@@ -53,8 +51,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public int battleCount = 0;
     void Start()
     {
-        ownerPlayerableList = new List<Playerable>();
-        otherPlayerableList = new List<Playerable>();
         masterDic = new Dictionary<int, Playerable>();
         clientDic = new Dictionary<int, Playerable>();
 
@@ -72,20 +68,18 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     {
         for (int i = 0; i < User.instance.Deck.Count; i++)
         {
-            ownerPlayerableList.Add(User.instance.Deck[i]);
             string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
             GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
+            foreach(GameObject skill in clonePlayer.GetComponent<Character>().skill)
+                skill.GetComponent<Skill>().battle_type = BATTLE_TYPE.PVP;
             Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
             clonePlayer.transform.position = playerPos[i].position;
             if (PhotonNetwork.IsMasterClient)
-            {
                 clonePlayer.transform.LookAt(otherPlayerPos[i]);
-            }
             else
-            {
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
-            }
-            photonView.RPC("AddList", RpcTarget.AllViaServer, clonePlayer.GetComponent<PhotonView>().ViewID, i);
+
+            photonView.RPC("AddList", RpcTarget.All, clonePlayer.GetComponent<PhotonView>().ViewID, i);
         }
     }
 
@@ -93,11 +87,17 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public void AddList(int id, int index)
     {
         battleList.Add(id);
-        if (PhotonView.Find(id).IsMine && PhotonNetwork.IsMasterClient)
-            masterDic.Add(id, User.instance.Deck[index]);
-        else
-            clientDic.Add(id, User.instance.Deck[index]);
+        AddDic(PhotonView.Find(id).GetComponent<Playerable>(), User.instance.Deck[index]);
     }
+
+    public void AddDic(Playerable player, Playerable original)
+    {
+        if (player.GetComponent<PhotonView>().Owner.NickName.Equals(PhotonNetwork.MasterClient.NickName))
+            masterDic.Add(player.GetComponent<PhotonView>().ViewID, original);
+        else
+            clientDic.Add(player.GetComponent<PhotonView>().ViewID, original);
+    }
+
 
     [PunRPC]
     public void Copy()
@@ -113,7 +113,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
         for (int i = 0; i < battleList.Count; i++)
         {
-            if (PhotonView.Find(battleList[i]).IsMine)
+            if (PhotonView.Find(battleList[i]).Owner.NickName.Equals(PhotonNetwork.MasterClient.NickName))
             {
                 PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
             }
@@ -170,7 +170,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
         {
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 10))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
                 Debug.Log(hit.collider.name);
                 if (!hit.collider.GetComponent<PhotonView>().IsMine)
@@ -183,7 +183,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public void BattleSet()
     {
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
-        UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("Init", RpcTarget.All);
+        UIManager.instance.pvpTurnTableUIController.Init();
     }
 
     public void BattleDamage(float damage, ATTACK_TYPE atkType)
@@ -218,7 +218,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     }
 
 
-
+    [PunRPC]
     public void NextOrder()
     {
         if (battleList.Count <= 0)
@@ -242,18 +242,18 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     IEnumerator WaitSeCo()
     {
         yield return new WaitForSeconds(1.5f);
-        UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("MoveTurnTable", RpcTarget.All);
+        UIManager.instance.pvpTurnTableUIController.MoveTurnTable();
     }
 
     IEnumerator WaitCam()
     {
-        yield return new WaitForSeconds(3);
-        Copy();
+        //yield return new WaitForSeconds(3);
+        //photonView.RPC("Copy", RpcTarget.All);
         yield return new WaitForSeconds(4);
         photonView.RPC("Sort", RpcTarget.All);
+        yield return new WaitForSeconds(2);
         if (photonView.IsMine)
             photonView.RPC("BattleSet", RpcTarget.AllBuffered);
-        yield return new WaitForSeconds(2);
         BattleStart();
 
         yield return null;

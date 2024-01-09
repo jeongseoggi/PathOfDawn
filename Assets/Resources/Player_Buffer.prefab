@@ -83152,6 +83152,7 @@ GameObject:
   - component: {fileID: -1378567758332419371}
   - component: {fileID: -2475594805089351975}
   - component: {fileID: 527806127566867844}
+  - component: {fileID: 600033509782668102}
   m_Layer: 10
   m_Name: Player_Buffer
   m_TagString: Untagged
@@ -83288,6 +83289,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!65 &600033509782668102
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335005432433379355}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.9926337, z: 1}
+  m_Center: {x: 0, y: 0.9585013, z: 0}
 --- !u!1 &5335005432433380985
 GameObject:
   m_ObjectHideFlags: 0

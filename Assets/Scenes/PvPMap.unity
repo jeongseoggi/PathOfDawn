@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_17
       objectReference: {fileID: 0}
+    - target: {fileID: 117630, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473574, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
       propertyPath: m_RootOrder
       value: 18
@@ -194,6 +198,10 @@ PrefabInstance:
     - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_Name
       value: SM_Env_Obelisk_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 460760, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_RootOrder
@@ -256,7 +264,7 @@ GameObject:
   - component: {fileID: 103068870}
   - component: {fileID: 103068869}
   - component: {fileID: 103068868}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneFwd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,6 +346,10 @@ PrefabInstance:
     - target: {fileID: 110106, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_19
+      objectReference: {fileID: 0}
+    - target: {fileID: 110106, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 412926, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
       propertyPath: m_RootOrder
@@ -448,6 +460,10 @@ PrefabInstance:
     - target: {fileID: 190504, guid: 6041dc253bbed79498437808853d8183, type: 3}
       propertyPath: m_Name
       value: SM_Env_CrackedRock_12
+      objectReference: {fileID: 0}
+    - target: {fileID: 190504, guid: 6041dc253bbed79498437808853d8183, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 473592, guid: 6041dc253bbed79498437808853d8183, type: 3}
       propertyPath: m_RootOrder
@@ -581,6 +597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_03
       objectReference: {fileID: 0}
+    - target: {fileID: 145588, guid: d00442b5e6db1d946841cbe6ef7562d4, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 406854, guid: d00442b5e6db1d946841cbe6ef7562d4, type: 3}
       propertyPath: m_RootOrder
       value: 22
@@ -641,6 +661,10 @@ PrefabInstance:
     - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Tiles_196
+      objectReference: {fileID: 0}
+    - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 468454, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_RootOrder
@@ -704,7 +728,7 @@ GameObject:
   - component: {fileID: 498020980}
   - component: {fileID: 498020979}
   - component: {fileID: 498020978}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BgRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -801,6 +825,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_CrackedRock_11
       objectReference: {fileID: 0}
+    - target: {fileID: 190504, guid: 6041dc253bbed79498437808853d8183, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473592, guid: 6041dc253bbed79498437808853d8183, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -863,7 +891,7 @@ GameObject:
   - component: {fileID: 548057658}
   - component: {fileID: 548057657}
   - component: {fileID: 548057656}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BgUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -960,6 +988,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ritual
       objectReference: {fileID: 0}
+    - target: {fileID: 1590511738951965451, guid: 2a532546b42416944a3e99307e8b47a7, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1590511738951965492, guid: 2a532546b42416944a3e99307e8b47a7, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1030,6 +1062,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 580977484}
     m_Modifications:
+    - target: {fileID: 101228, guid: 2f8bac6b7bae5254bbf64855f6613f5e, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 479558, guid: 2f8bac6b7bae5254bbf64855f6613f5e, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1109,7 +1145,7 @@ GameObject:
   - component: {fileID: 637232304}
   - component: {fileID: 637232303}
   - component: {fileID: 637232302}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BgFwd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1206,6 +1242,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_25
       objectReference: {fileID: 0}
+    - target: {fileID: 117630, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473574, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1267,6 +1307,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_CrackedRock_09
       objectReference: {fileID: 0}
+    - target: {fileID: 190504, guid: 6041dc253bbed79498437808853d8183, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473592, guid: 6041dc253bbed79498437808853d8183, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -1327,6 +1371,10 @@ PrefabInstance:
     - target: {fileID: 167114, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_15
+      objectReference: {fileID: 0}
+    - target: {fileID: 167114, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 484294, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
       propertyPath: m_RootOrder
@@ -1433,6 +1481,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_18
       objectReference: {fileID: 0}
+    - target: {fileID: 134226, guid: 1d394c025fb78e347ba38449641c36e2, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 443018, guid: 1d394c025fb78e347ba38449641c36e2, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -1494,7 +1546,7 @@ GameObject:
   - component: {fileID: 818364611}
   - component: {fileID: 818364610}
   - component: {fileID: 818364609}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1577,6 +1629,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Obelisk_03
       objectReference: {fileID: 0}
+    - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 460760, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1637,6 +1693,10 @@ PrefabInstance:
     - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Tiles_198
+      objectReference: {fileID: 0}
+    - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 468454, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_RootOrder
@@ -1769,6 +1829,10 @@ PrefabInstance:
     - target: {fileID: 145638, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_14
+      objectReference: {fileID: 0}
+    - target: {fileID: 145638, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 471790, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
       propertyPath: m_RootOrder
@@ -2049,7 +2113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 947582026}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BackGroundPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2087,6 +2151,10 @@ PrefabInstance:
     - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_Name
       value: SM_Env_Tiles_197
+      objectReference: {fileID: 0}
+    - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 468454, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_RootOrder
@@ -2149,7 +2217,7 @@ GameObject:
   - component: {fileID: 1196848786}
   - component: {fileID: 1196848785}
   - component: {fileID: 1196848784}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2302,6 +2370,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Obelisk_02
       objectReference: {fileID: 0}
+    - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 460760, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -2362,6 +2434,10 @@ PrefabInstance:
     - target: {fileID: 110106, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_16
+      objectReference: {fileID: 0}
+    - target: {fileID: 110106, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 412926, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
       propertyPath: m_RootOrder
@@ -2491,7 +2567,7 @@ GameObject:
   - component: {fileID: 1416386351}
   - component: {fileID: 1416386350}
   - component: {fileID: 1416386349}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2574,6 +2650,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_22
       objectReference: {fileID: 0}
+    - target: {fileID: 145588, guid: d00442b5e6db1d946841cbe6ef7562d4, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 406854, guid: d00442b5e6db1d946841cbe6ef7562d4, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -2636,7 +2716,7 @@ GameObject:
   - component: {fileID: 1527718231}
   - component: {fileID: 1527718230}
   - component: {fileID: 1527718229}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BgLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2733,6 +2813,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_CrackedRock_10
       objectReference: {fileID: 0}
+    - target: {fileID: 190504, guid: 6041dc253bbed79498437808853d8183, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 473592, guid: 6041dc253bbed79498437808853d8183, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -2793,6 +2877,10 @@ PrefabInstance:
     - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_Name
       value: SM_Env_Obelisk_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 460760, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_RootOrder
@@ -2956,6 +3044,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_24
       objectReference: {fileID: 0}
+    - target: {fileID: 110106, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 412926, guid: b085acf4daf0e2045876fb122e2f39c8, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -3107,6 +3199,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 580977484}
     m_Modifications:
+    - target: {fileID: 148708, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 460760, guid: 18a46a3340964084192d989b9cf0359a, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -3167,6 +3263,10 @@ PrefabInstance:
     - target: {fileID: 145638, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_20
+      objectReference: {fileID: 0}
+    - target: {fileID: 145638, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 471790, guid: 9543382690c0b4a45bab4ad4b37def98, type: 3}
       propertyPath: m_RootOrder
@@ -3229,6 +3329,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Tiles_199
       objectReference: {fileID: 0}
+    - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 468454, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_RootOrder
       value: 23
@@ -3289,6 +3393,10 @@ PrefabInstance:
     - target: {fileID: 117630, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_21
+      objectReference: {fileID: 0}
+    - target: {fileID: 117630, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 473574, guid: 3c7e3093f2f74ad499210774e0d01aea, type: 3}
       propertyPath: m_RootOrder
@@ -3419,6 +3527,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Rock_Flat_23
       objectReference: {fileID: 0}
+    - target: {fileID: 167114, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 484294, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -3480,7 +3592,7 @@ GameObject:
   - component: {fileID: 1940105236}
   - component: {fileID: 1940105235}
   - component: {fileID: 1940105234}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3661,7 +3773,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2000788332}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3699,7 +3811,7 @@ GameObject:
   - component: {fileID: 2088844907}
   - component: {fileID: 2088844906}
   - component: {fileID: 2088844905}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BlackPlaneFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3783,8 +3895,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d2670cb4aee194696f818ea45944b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pvpP: {fileID: 1977701635882132950}
-  pvpO: {fileID: 1977701635461136603}
   masterPlayerPos:
   - {fileID: 1396387834063734115}
   - {fileID: 1396387833617110761}
@@ -3797,6 +3907,9 @@ MonoBehaviour:
   otherPlayerableList: []
   battleList: 
   mainCam: {fileID: 940605123}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
   targetSelectEffect: {fileID: 3383098805634775096, guid: cafe4d0f249fabc42b831b64562485b4, type: 3}
   curTurnCharacterID: 0
   targetCharacter: {fileID: 0}
@@ -6896,7 +7009,7 @@ GameObject:
   - component: {fileID: 6059894017960995092}
   - component: {fileID: 6059894017959971018}
   - component: {fileID: 6123390956302927284}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BgBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
