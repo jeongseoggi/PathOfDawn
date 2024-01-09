@@ -3,10 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.Playables;
 
 public class PVPBattleManager : Singleton<PVPBattleManager>, IPunObservable
 {
@@ -26,6 +23,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>, IPunObservable
     public GameObject targetSelectEffect;
     public int curTurnCharacterID;
     public int targetCharacter;
+    public string myName;
     public int TargetCharacter
     {
         get => targetCharacter;
@@ -52,6 +50,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>, IPunObservable
     public int battleCount = 0;
     void Start()
     {
+        myName = PhotonNetwork.IsMasterClient ? PhotonNetwork.MasterClient.NickName : PhotonNetwork.CurrentRoom.Players[2].NickName;
         masterDic = new Dictionary<int, Playerable>();
         clientDic = new Dictionary<int, Playerable>();
 
@@ -169,7 +168,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>, IPunObservable
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && PhotonView.Find(curTurnCharacterID).IsMine)
+        if (Input.GetMouseButtonDown(0) && PhotonView.Find(curTurnCharacterID).Owner.NickName.Equals(myName))
         {
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
