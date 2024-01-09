@@ -75,9 +75,13 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
             Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
             clonePlayer.transform.position = playerPos[i].position;
             if (PhotonNetwork.IsMasterClient)
+            {
                 clonePlayer.transform.LookAt(otherPlayerPos[i]);
+            }
             else
+            {
                 clonePlayer.transform.LookAt(masterPlayerPos[i]);
+            }
 
             photonView.RPC("AddList", RpcTarget.All, clonePlayer.GetComponent<PhotonView>().ViewID, i);
         }
@@ -87,17 +91,13 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public void AddList(int id, int index)
     {
         battleList.Add(id);
-        AddDic(PhotonView.Find(id).GetComponent<Playerable>(), User.instance.Deck[index]);
-    }
-
-    public void AddDic(Playerable player, Playerable original)
-    {
-        if (player.GetComponent<PhotonView>().Owner.NickName.Equals(PhotonNetwork.MasterClient.NickName))
-            masterDic.Add(player.GetComponent<PhotonView>().ViewID, original);
+        if(PhotonView.Find(id).IsMine)
+        {
+            masterDic.Add(id, PhotonView.Find(id).GetComponent<Playerable>());
+        }
         else
-            clientDic.Add(player.GetComponent<PhotonView>().ViewID, original);
+            clientDic.Add(id, PhotonView.Find(id).GetComponent<Playerable>());
     }
-
 
     [PunRPC]
     public void Copy()
@@ -160,8 +160,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
             }
 
         }
-
-        
     }
 
     private void Update()
@@ -247,8 +245,8 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
     IEnumerator WaitCam()
     {
-        //yield return new WaitForSeconds(3);
-        //photonView.RPC("Copy", RpcTarget.All);
+        yield return new WaitForSeconds(3);
+        photonView.RPC("Copy", RpcTarget.All);
         yield return new WaitForSeconds(4);
         photonView.RPC("Sort", RpcTarget.All);
         yield return new WaitForSeconds(2);

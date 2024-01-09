@@ -24220,6 +24220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 0
+  battle_type: 0
   playerable: {fileID: 0}
   type: 0
 --- !u!1 &836664167365417338
@@ -29052,6 +29053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 0
+  battle_type: 0
   playerable: {fileID: 0}
   type: 0
 --- !u!1 &1123139418737131385
@@ -34123,6 +34125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillDamage: 0
   skillPercent: 0
+  battle_type: 0
   playerable: {fileID: 0}
   type: 0
 --- !u!1 &1133055188556870531
@@ -83231,6 +83234,7 @@ MonoBehaviour:
   aggro: 0
   turnCount: 1
   level: 1
+  isDie: 0
   impact: {fileID: 0}
   character_image: {fileID: 21300000, guid: fa36664bfbbece641aa06c1170c5bb9c, type: 3}
   skill:
