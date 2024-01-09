@@ -8,26 +8,23 @@ public class PVPOtherPlayerableUIController : MonoBehaviourPunCallbacks
 {
     public PlayerableUISlot[] playerableUISlots;
     public bool isMaster;
+    int i = 0;
+    Dictionary<int, Playerable> targetDic;
     private void Start()
     {
         UIManager.instance.otherPlayerUIController = this;
-        
-
         gameObject.SetActive(false);
     }
 
     [PunRPC]
     public void Set()
     {
-        Dictionary<int, Playerable> targetDic = isMaster ? PVPBattleManager.instance.masterDic : PVPBattleManager.instance.clientDic;
-        int i = 0;
-        foreach (KeyValuePair<int, Playerable> kv in targetDic)
+        foreach (KeyValuePair<int, Playerable> kv in PVPBattleManager.instance.clientDic)
         {
-            if (i >= playerableUISlots.Length)
-                i = 0;
-            if (photonView.IsMine)
-                playerableUISlots[i].Init(kv.Key);
+            Debug.Log(i);
+            playerableUISlots[i].Init(kv.Key);
             i++;
         }
+        i = 0;
     }
 }

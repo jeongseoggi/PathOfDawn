@@ -1,11 +1,9 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PVPBattleManager : Singleton<PVPBattleManager>
 {
@@ -47,7 +45,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
             }
             else
             {
-                UIManager.instance.behaviorUIController.gameObject.SetActive(false);
+                UIManager.instance.pVpBehaviorUIController.gameObject.SetActive(false);
             }
         }
     }
@@ -74,12 +72,12 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     {
         for (int i = 0; i < User.instance.Deck.Count; i++)
         {
+            ownerPlayerableList.Add(User.instance.Deck[i]);
             string[] cloneStr = User.instance.Deck[i].gameObject.name.Split("(");
             GameObject clonePlayer = PhotonNetwork.Instantiate(cloneStr[0], transform.position, Quaternion.identity);
-            ownerPlayerableList.Add(User.instance.Deck[i]);
             Transform[] playerPos = PhotonNetwork.IsMasterClient ? masterPlayerPos : otherPlayerPos;
             clonePlayer.transform.position = playerPos[i].position;
-            if (clonePlayer.GetComponent<PhotonView>().IsMine)
+            if (PhotonNetwork.IsMasterClient)
             {
                 clonePlayer.transform.LookAt(otherPlayerPos[i]);
             }
@@ -95,7 +93,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     public void AddList(int id, int index)
     {
         battleList.Add(id);
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonView.Find(id).IsMine && PhotonNetwork.IsMasterClient)
             masterDic.Add(id, User.instance.Deck[index]);
         else
             clientDic.Add(id, User.instance.Deck[index]);
@@ -104,19 +102,24 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     [PunRPC]
     public void Copy()
     {
-        for (int i = 0; i< battleList.Count; i++)
+        foreach (KeyValuePair<int, Playerable> kv in masterDic)
         {
-            if(PhotonView.Find(battleList[i]).IsMine)
-            {
-                if(PhotonNetwork.IsMasterClient)
-                {
-                    PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
-                }
-                else
-                {
-                    PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(clientDic[battleList[i]]);
+            Debug.Log("마스터" + masterDic[kv.Key].Level);
+        }
+        foreach (KeyValuePair<int, Playerable> kv in clientDic)
+        {
+            Debug.Log("클라 : " + clientDic[kv.Key].Level);
+        }
 
-                }
+        for (int i = 0; i < battleList.Count; i++)
+        {
+            if (PhotonView.Find(battleList[i]).IsMine)
+            {
+                PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(masterDic[battleList[i]]);
+            }
+            else
+            {
+                PhotonView.Find(battleList[i]).GetComponent<Playerable>().DeepCopy(clientDic[battleList[i]]);
             }
         }
     }
@@ -124,19 +127,7 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     [PunRPC]
     public void BattleStart()
     {
-        if (photonView.IsMine)
-        {
-            UIManager.instance.pVpPlayerableUIController.isMaster = true;
-            UIManager.instance.otherPlayerUIController.isMaster = false;
-        }
-        else
-        {
-            UIManager.instance.pVpPlayerableUIController.isMaster = false;
-            UIManager.instance.otherPlayerUIController.isMaster = true;
-        }
-
-
-
+        Debug.Log(clientDic.Count);
         UIManager.instance.pVpPlayerableUIController.gameObject.SetActive(true);
         UIManager.instance.otherPlayerUIController.gameObject.SetActive(true);
         UIManager.instance.pVpPlayerableUIController.Set();
@@ -175,13 +166,14 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && PhotonView.Find(battleList[battleCount]).IsMine)
+        if (Input.GetMouseButtonDown(0) && PhotonView.Find(curTurnCharacterID).IsMine)
         {
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, float.MaxValue, 1 << 10))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 10))
             {
-                if(!hit.collider.GetComponent<PhotonView>().IsMine)
+                Debug.Log(hit.collider.name);
+                if (!hit.collider.GetComponent<PhotonView>().IsMine)
                     TargetCharacter = hit.collider.GetComponent<Playerable>();
             }
         }
@@ -192,7 +184,6 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     {
         UIManager.instance.pvpTurnTableUIController.gameObject.SetActive(true);
         UIManager.instance.pvpTurnTableUIController.GetComponent<PhotonView>().RPC("Init", RpcTarget.All);
-        BattleStart();
     }
 
     public void BattleDamage(float damage, ATTACK_TYPE atkType)
@@ -257,11 +248,14 @@ public class PVPBattleManager : Singleton<PVPBattleManager>
     IEnumerator WaitCam()
     {
         yield return new WaitForSeconds(3);
-        photonView.RPC("Copy", RpcTarget.All);
+        Copy();
         yield return new WaitForSeconds(4);
         photonView.RPC("Sort", RpcTarget.All);
         if (photonView.IsMine)
             photonView.RPC("BattleSet", RpcTarget.AllBuffered);
+        yield return new WaitForSeconds(2);
+        BattleStart();
+
         yield return null;
     }
 }

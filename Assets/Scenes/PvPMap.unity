@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -561,7 +561,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 225373745}
-  m_LocalRotation: {x: 0.16626015, y: 0.6829775, z: -0.16407262, w: 0.6920834}
+  m_LocalRotation: {x: 0.16626014, y: 0.6829775, z: -0.1640726, w: 0.6920834}
   m_LocalPosition: {x: -15.100001, y: 7.7, z: -0.19999981}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3783,6 +3783,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d2670cb4aee194696f818ea45944b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pvpP: {fileID: 1977701635882132950}
+  pvpO: {fileID: 1977701635461136603}
   masterPlayerPos:
   - {fileID: 1396387834063734115}
   - {fileID: 1396387833617110761}
@@ -4171,7 +4173,6 @@ MonoBehaviour:
   images: []
   imagesPos: []
   imgPrevPos: []
-  pb: {fileID: 0}
 --- !u!224 &1977701634807256760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4224,7 +4225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33ef9f4ed4652a24fa3d47045845fbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pb: {fileID: 1396387833383790248}
   atkBtn: {fileID: 1977701635184205698}
   skillBtn: {fileID: 1977701635771097495}
   ultimateBtn: {fileID: 1977701635694786233}
@@ -4862,7 +4862,6 @@ MonoBehaviour:
   - {fileID: 8977421467100732917}
   - {fileID: 4286954452293502842}
   isMaster: 0
-  pb: {fileID: 1396387833383790248}
 --- !u!114 &1977701635461136604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5844,7 +5843,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2428b678dee6c894b9074d22f6236d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pb: {fileID: 1396387833383790248}
   playerableUISlots:
   - {fileID: 1977701636496957775}
   - {fileID: 1977701635558071327}
@@ -7802,7 +7800,6 @@ MonoBehaviour:
   images: []
   imagesPos: []
   imgPrevPos: []
-  pb: {fileID: 1396387833383790248}
 --- !u!1001 &8977421467100732915
 PrefabInstance:
   m_ObjectHideFlags: 0
