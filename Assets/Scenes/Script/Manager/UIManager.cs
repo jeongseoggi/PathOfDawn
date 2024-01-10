@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
+using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
+using TMPro;
+
+//UIView ¸®ÆÑÅä¸µ
+[AttributeUsage(AttributeTargets.Field)]
+public class UIView : Attribute
+{
+    string name;
+
+    public string Name => name;
+
+    public UIView(string fieldName)
+    {
+        name = fieldName;
+    }
+}
 
 public class UIManager : Singleton<UIManager>
 {
@@ -35,6 +52,7 @@ public class UIManager : Singleton<UIManager>
         btnViewControllers[0].Init();
         btnViewControllers[1].Init();
     }
+
 
     public void SetBtn()
     {

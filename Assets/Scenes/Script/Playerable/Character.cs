@@ -6,18 +6,18 @@ using UnityEngine;
 
 public class Character : MonoBehaviourPun, IComparable<Character>
 {
-    [SerializeField] protected string job;       //이름
-    [SerializeField] protected float hp;          //체력
+    [SerializeField][UIView("직업")] protected string job;       //이름
+    [SerializeField][UIView("체력")] protected float hp;          //체력
     [SerializeField] protected float maxHp;       //최대체력
-    [SerializeField] protected float atk;         //공격력
-    [SerializeField] protected float def;         //방어력
-    [SerializeField] protected int dodge;         //회피력
-    [SerializeField] protected float mp;          //마나
+    [SerializeField][UIView("공격력")] protected float atk;         //공격력
+    [SerializeField][UIView("방어력")] protected float def;         //방어력
+    [SerializeField][UIView("회피력")] protected int dodge;         //회피력
+    [SerializeField][UIView("마나")] protected float mp;          //마나
     [SerializeField] protected float maxMp;       //최대마나
-    [SerializeField] protected int speed;         //속도
-    [SerializeField] protected int aggro;         //어그로 수치
+    [SerializeField][UIView("속도")] protected int speed;         //속도
+    [SerializeField][UIView("어그로")] protected int aggro;         //어그로 수치
     [SerializeField] protected int turnCount = 1; //턴 카운트
-    [SerializeField] protected int level;
+    [SerializeField][UIView("레벨")] protected int level;
     public bool isDie = false;
 
     public GameObject impact;
@@ -72,27 +72,5 @@ public class Character : MonoBehaviourPun, IComparable<Character>
         Speed = original.speed;
         Aggro = original.aggro;
         Level = original.level;
-    }
-
-    [PunRPC]
-    public void DeepCopy(int id)
-    {
-        foreach (Character character in User.instance.Deck)
-        {
-            if (character.Job == PhotonView.Find(id).GetComponent<Playerable>().Job)
-            {
-                PhotonView.Find(id).GetComponent<Character>().job = character.job;
-                PhotonView.Find(id).GetComponent<Character>().hp = character.hp;
-                PhotonView.Find(id).GetComponent<Character>().maxHp = character.maxHp;
-                PhotonView.Find(id).GetComponent<Character>().atk = character.atk;
-                PhotonView.Find(id).GetComponent<Character>().def = character.def;
-                PhotonView.Find(id).GetComponent<Character>().dodge = character.dodge;
-                PhotonView.Find(id).GetComponent<Character>().mp = character.mp;
-                PhotonView.Find(id).GetComponent<Character>().maxMp = character.maxMp;
-                PhotonView.Find(id).GetComponent<Character>().speed = character.speed;
-                PhotonView.Find(id).GetComponent<Character>().aggro = character.aggro;
-                PhotonView.Find(id).GetComponent<Character>().level = character.level;
-            }
-        }
     }
 }

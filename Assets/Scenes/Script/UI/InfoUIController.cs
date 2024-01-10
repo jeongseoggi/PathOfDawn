@@ -11,18 +11,10 @@ public class InfoUIController : MonoBehaviour
 
     public Playerable selectCharacter;
 
-    public TextMeshProUGUI jobText;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI hpText;
-    public TextMeshProUGUI mpText;
-    public TextMeshProUGUI atkText;
-    public TextMeshProUGUI defText;
-    public TextMeshProUGUI dodgeText;
-    public TextMeshProUGUI speedText;
-    public TextMeshProUGUI aggroText;
-
     BtnPressGrow btnPressGrow;
     BtnImageViewController btnImageViewController;
+
+    public GameObject infoFrame;
 
     private void Start()
     {
@@ -37,33 +29,6 @@ public class InfoUIController : MonoBehaviour
             p.gameObject.SetActive(false);
     }
 
-    public void SetInfoText(Playerable p)
-    {
-        if (p == null)
-        {
-            jobText.text = "직업 : ";
-            levelText.text = "레벨 : ";
-            hpText.text = "체력 : ";
-            mpText.text = "마나 : ";
-            atkText.text = "공격력 : ";
-            defText.text = "방어력 : ";
-            dodgeText.text = "회피 : ";
-            speedText.text = "속도 : ";
-            aggroText.text = "어그로 : ";
-            return;
-        }
-
-        jobText.text = "직업 : " + p.Job;
-        levelText.text = "레벨 : " + p.Level;
-        hpText.text = "체력 : " + p.Hp;
-        mpText.text = "마나 : " + p.Mp;
-        atkText.text = "공격력 : " + p.Atk;
-        defText.text = "방어력 : " + p.Def;
-        dodgeText.text = "회피 : " + p.Dodge;
-        speedText.text = "속도 : " + p.Speed;
-        aggroText.text = "어그로 : " + p.Aggro;
-    }
-
     public void SelectCharacterType(int num)
     {
         if(num >= User.instance.MyCharacters.Count)
@@ -76,7 +41,8 @@ public class InfoUIController : MonoBehaviour
 
         SetInfoPosObject(selectCharacter);
         btnPressGrow.SetBtnGrow(num);
-        SetInfoText(selectCharacter);
+        infoFrame.GetComponent<Info>().Init(selectCharacter);
+        //SetInfoText(selectCharacter);
     }
 
     public void SetInfoPosObject(Playerable selectPlayerabl)
